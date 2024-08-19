@@ -39,12 +39,6 @@ jobs:
     - name: Build project
       run: yarn build
 
-    - name: List files in the current directory
-      run: ls -la
-
-    - name: List files in the build directory
-      run: ls -la build/
-
 
     # - name: Run Cypress tests
     #   run: yarn run cypress
@@ -56,8 +50,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
         
       - name: List files in the current directory
         run: ls -la
