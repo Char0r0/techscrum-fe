@@ -1,0 +1,56 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: techscurm build and deploy
+run-name: ${{ github.actor }} is testing out Github Actions
+
+on:
+  push:
+    branches: 
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with: 
+        node-version: '18'
+        cache: 'yarn'
+
+    - name: Install dependencies
+      run: yarn install
+      
+    - run: yarn add cypress --dev
+      
+    - name: Copy env variables
+      run: cp .env.local.example .env
+
+    - name: Build project
+      run: yarn build
+
+    - name: Run Cypress tests
+      run: yarn run cypress
+
+    - name: build storybook
+      run: yarn run storybook:build
+
+  deploy:
+    runs-on: ubuntu-lastest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Deploy to S3
+        run: aws s3 sync build/ s3://${{ secrets.AWS_S3_BUCKET }} --delete
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'ap-southeast-2' # 修改为你S3 bucket所在的区域
+          S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET }
+          
