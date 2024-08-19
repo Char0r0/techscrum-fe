@@ -53,7 +53,7 @@ jobs:
         uses: actions/checkout@v3
         
       - name: Deploy to S3
-        run: aws s3 sync build/ s3://${{ secrets.AWS_S3_BUCKET }} --delete
+        run: aws s3 sync build/ s3://techscrum-s3-test --delete
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
