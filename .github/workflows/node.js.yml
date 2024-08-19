@@ -52,6 +52,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         
+      - name: List files in the current directory
+        run: ls -la
+
+      - name: List files in the build directory
+        run: ls -la build/
+
       - name: Deploy to S3
         run: aws s3 sync build/ s3://techscrum-s3-test --delete
         env:
