@@ -25,7 +25,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with: 
-        node-version: '18'
+        node-version: '20'
         cache: 'yarn'
 
     - name: Install dependencies
@@ -46,7 +46,7 @@ jobs:
     #   run: yarn run storybook:build
 
   deploy:
-    runs-on: ubuntu-lastest
+    runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Checkout code
@@ -58,7 +58,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: 'ap-southeast-2' 
-          S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET }}
 
       - name: Clean up workspace
         run: rm -rf build
